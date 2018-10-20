@@ -90,8 +90,7 @@ standards in the work?
 > To develop the processes and proficiencies addressed in the practice standards, students must be engaged in rich, high-level mathematical tasks... [These] demand a greater level of cognitive effort to solve than routine practice problems...
 
 ```
-This may help us differentiate algorithmic thinking from following procedures.
-Also, it may help clarify the types of tasks that drive students to engage in
+This may help us differentiate algorithmic thinking from following procedures.Also, it may help clarify the types of tasks that drive students to engage in
 mathematics work.
 
 Can we help teachers see the difference between the low-level
