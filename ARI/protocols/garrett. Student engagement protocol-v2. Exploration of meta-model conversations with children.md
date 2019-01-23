@@ -1,4 +1,4 @@
-Title:	Exploration of meta-model conversations with children.
+	Title:	Exploration of meta-model conversations with children.
 
 Subtitle:	Child engagement protocol
 Version:	2 / 2103 Apr 1. Focus on nighttime sky

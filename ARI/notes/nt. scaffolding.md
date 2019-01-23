@@ -34,3 +34,5 @@ Tutor needs to be able to focus on specific child needs but also comparing each 
 
 Scaffolding process: recruitment, reduction in degrees of freedom, direction maintenance, marking critical features, frustration control, demonstration: attempt to allow learner to see discrepancies
 
+## 20181101
+
