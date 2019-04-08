@@ -1,0 +1,107 @@
+---
+version: draft
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+title: "Descriptive statistics for engagement data"
+output: 
+  rmarkdown::html_document:
+    css: ../css/simple_report.css
+vignette: >
+  %\VignetteIndexEntry{test-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+## Load libraries
+
+library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
+library(broom)
+library(knitr)
+library(algor)
+
+## RMD options
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  fig.width = 7, 
+  fig.height = 5,
+  fig.path = "../figures/"
+)
+
+## Set local vignette parameters
+
+# NA
+```
+
+```{r get-dat}
+
+## Read dataset from package data into "Global" environment
+
+# data table has behovior types spread across three variables
+load(file.path("..", "data", "engagement_tbl.rda"))
+
+#a tidy it up by stacking behviors
+engagement_tidy <- 
+  engagement_tbl %>% gather(key = "behavior", 
+                            value = count, c(academic, management, competing))
+
+```
+
+```{r descriptives}
+
+## By segment
+# Mean/SD by segment and behavior type
+tmp1 <- engagement_tidy %>% 
+  group_by(segment, behavior) %>% 
+  summarize(M = mean(count, na.rm = TRUE), SD = sd(count, na.rm = TRUE))
+
+# Mean/SD overall by behavior type
+tmp2 <- engagement_tidy %>% 
+  group_by(behavior) %>% 
+  summarize(M = mean(count, na.rm = TRUE), SD = sd(count, na.rm = TRUE)) %>% 
+  bind_cols(segment = rep_along(., "All"), .)
+
+# Present as 4 column table
+bind_rows(tmp1, tmp2) %>% 
+  kable(digits = 2, 
+        caption = "Descriptive statistics of student engagement by treatment segment")
+
+## By teacher position
+# Mean/SD by segment and behavior type
+tmp1 <- engagement_tidy %>% 
+  group_by(teacher, behavior, .drop = TRUE) %>% 
+  summarize(M = mean(count, na.rm = TRUE), SD = sd(count, na.rm = TRUE))
+
+# Mean/SD overall by behavior type
+tmp2 <- engagement_tidy %>% 
+  group_by(behavior, .drop = TRUE) %>% 
+  summarize(M = mean(count, na.rm = TRUE), SD = sd(count, na.rm = TRUE)) %>% 
+  bind_cols(teacher = rep_along(., "Any"), .)
+
+# Present as 4 column table
+bind_rows(tmp1, tmp2) %>% 
+  kable(digits = 2, 
+        caption = "Descriptive statistics of student engagement by teacher position")
+
+# Cleanup temp variables
+rm(tmp1, tmp2)
+
+```
+
+```{r hist_counts}
+
+ggplot(engagement_tidy, aes(x = count, fill = behavior)) + 
+  geom_histogram(position = "dodge", binwidth = 1) +
+  facet_wrap(~segment)
+
+```
+
