@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include = FALSE}
 ## Load libraries
 
 library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
@@ -42,6 +42,10 @@ knitr::opts_chunk$set(
 # NA
 ```
 
+## Get data
+
+Retrieving data object and creating tidy stacked version
+
 ```{r get-dat}
 
 ## Read dataset from package data into "Global" environment
@@ -55,6 +59,8 @@ engagement_tidy <-
                             value = count, c(academic, management, competing))
 
 ```
+
+## Descriptive statistics
 
 ```{r descriptives}
 
@@ -97,10 +103,12 @@ rm(tmp1, tmp2)
 
 ```
 
-```{r hist_counts}
+```{r hist-of-engagement-behaviors}
 
 ggplot(engagement_tidy, aes(x = count, fill = behavior)) + 
-  geom_histogram(position = "dodge", binwidth = 1) +
+  geom_histogram(position = "dodge", binwidth = 2) +
+  labs(x = "count of behaviors", y = "number of intervals",
+       title = "Measures of engagement behaviors panaled by segment") +
   facet_wrap(~segment)
 
 ```
