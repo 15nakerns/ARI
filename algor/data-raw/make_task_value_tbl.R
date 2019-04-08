@@ -10,22 +10,20 @@ library(readxl)    # read_excel
 library(purrr)     # map
 
 # Raw data is a multisheet excel file
-dpath <- file.path(".", "data-raw", "engagement.xlsx")
-ds_sheets <- readxl::excel_sheets(dpath)
+dpath <- file.path(".", "data-raw", "class_session.xlsx")
+ds_sheets <- "IV"
 
 # fold each sheet into a single dataframe
-task_value_tidy <- ds_sheets %>%
-  purrr::map_dfr(~ readxl::read_excel(path = dpath, sheet = .),
-                 .id = "segment") %>%
-  mutate(segment = factor(segment, ordered = TRUE),
-         teacher = factor(teacher))
+task_value_tbl <- ds_sheets %>%
+  purrr::map_dfr(~ readxl::read_excel(path = dpath, sheet = ds_sheets)) %>%
+  mutate(segment = factor(segment, ordered = TRUE))
 
 # Quick checks for reasonableness
 
-glimpse(task_value_tidy)
+glimpse(task_value_tbl)
 
-engagement_tbl %>% group_by(segment) %>% summarize(n())
+task_value_tbl %>% group_by(segment) %>% summarize(n())
 
 ## Save as list of all tables as package data
 
-usethis::use_data(engagement_tbl, overwrite = TRUE)
+usethis::use_data(task_value_tbl, overwrite = TRUE)
