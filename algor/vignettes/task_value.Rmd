@@ -1,0 +1,118 @@
+---
+version: draft
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+title: "Descriptive statistics for intrinsic task value data"
+output: 
+  rmarkdown::html_document:
+    css: ../css/simple_report.css
+vignette: >
+  %\VignetteIndexEntry{test-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+## Load libraries
+
+library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
+library(broom)
+library(knitr)
+library(algor)
+
+## RMD options
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  fig.width = 7, 
+  fig.height = 5,
+  fig.path = "../figures/"
+)
+
+## Set local vignette parameters
+
+# NA
+```
+
+## Get data
+
+Retrieving data object and creating tidy stacked version
+
+```{r get-dat}
+
+## Read dataset from package data into "Global" environment
+
+# data table has task value measures across two variables
+load(file.path("..", "data", "task_value_tbl.rda"))
+
+# tidy it up by stacking measures
+task_value_tidy <- 
+  task_value_tbl %>% gather(key = "measure", 
+                            value = score, c(enj, int)) %>% 
+  mutate(measure = factor(measure, labels = c("enjoyment", "interest")))
+```
+
+## Descriptive statistics
+
+```{r descriptives}
+
+## By segment
+# Mean/SD by segment and behavior type
+task_value_tidy %>% 
+  group_by(segment, measure) %>% 
+  summarize(M = mean(score, na.rm = TRUE), SD = sd(score, na.rm = TRUE)) %>% 
+  kable(digits = 2, 
+        caption = "Mean scores on intrinsic task value by segment")
+
+```
+
+```{r hist-of-intrinsic-task-value-measures}
+
+ggplot(task_value_tidy, aes(x = score, fill = measure)) + 
+  geom_histogram(position = "dodge", binwidth = 1) + 
+  labs(x = "intrinsic value score", y = "frequency",
+       title = "Intrinsic task value measures paneled by segment") +
+  facet_wrap(~segment)
+
+```
+
+## Generalization to an ideal population
+
+### All ITV measures together
+
+```{r anova_model_all}
+
+# run all ITV measures together
+task_value_tidy %>% 
+  aov(score ~ segment, .) %>% 
+  anova()
+```
+
+### Enjoyment only
+
+```{r anova_model_enjoyment}
+# separate interest and enjoyment
+task_value_tidy %>% 
+  filter(measure == "enjoyment") %>% 
+  aov(score ~ segment, .) %>% 
+  anova()
+```
+
+### Interest only
+
+```{r anova_model_interest}
+task_value_tidy %>% 
+  filter(measure == "interest") %>% 
+  aov(score ~ segment, .) %>% 
+  anova()
+```
+
+
