@@ -65,11 +65,13 @@ task_value_tidy <-
 ```{r descriptives}
 
 ## By segment
-# Mean/SD by segment and behavior type
-task_value_tidy %>% 
+# Mean/SD by segment and behavior type. Table used in histogram below
+mean_tbl <- task_value_tidy %>% 
   group_by(segment, measure) %>% 
-  summarize(M = mean(score, na.rm = TRUE), SD = sd(score, na.rm = TRUE)) %>% 
-  kable(digits = 2, 
+  summarize(M = mean(score, na.rm = TRUE), SD = sd(score, na.rm = TRUE))
+
+# Print table now
+mean_tbl %>%   kable(digits = 2, 
         caption = "Mean scores on intrinsic task value by segment")
 
 ```
