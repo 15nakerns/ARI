@@ -19,9 +19,10 @@ attitude_ihs_tbl <- sheets[1:2] %>%
   mutate(timing = factor(timing, levels = c(1,2), labels =c("pre", "post"),
                          ordered = TRUE)
         )
+
 # Second two sheets are pre/post attitude about STEM after HS ("study and
 # work"). Stack them and identify with a factor
-attitude_ahs_tbl <- sheets[1:2] %>%
+attitude_ahs_tbl <- sheets[3:4] %>%
   map_dfr(read_excel, path = dpath, .id = "timing") %>%
   mutate(timing = factor(timing, levels = c(1,2), labels =c("pre", "post"),
                          ordered = TRUE)
@@ -35,7 +36,6 @@ glimpse(attitude_ahs_tbl)
 # Should be one pre, one post for each ID
 attitude_ihs_tbl %>% group_by(ID, timing) %>% summarize(n())
 attitude_ahs_tbl %>% group_by(ID, timing) %>% summarize(n())
-
 
 ## Save as list of all tables as package data
 
