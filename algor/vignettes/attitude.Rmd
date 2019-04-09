@@ -1,0 +1,103 @@
+---
+version: draft
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+title: "Descriptive statistics for attitude toward STEM data"
+output: 
+  rmarkdown::html_document:
+    css: ../css/simple_report.css
+vignette: >
+  %\VignetteIndexEntry{attitude-analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+## Load libraries
+
+library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
+library(broom)
+library(knitr)
+library(algor)
+
+## RMD options
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  fig.width = 7, 
+  fig.height = 5,
+  fig.path = "../figures/"
+)
+
+## Set local vignette parameters
+
+# NA
+```
+
+## Get data
+
+Retrieving data object and creating tidy stacked version
+
+```{r get-dat}
+
+## Read dataset from package data into "Global" environment
+
+# Attitude towards STEM in HS. Make composite scores for math, cs, and stem
+load(file.path("..", "data", "attitude_ihs_tbl.rda"))
+attitude_ihs_tbl <- attitude_ihs_tbl %>% 
+  mutate(math = (calc + trig)/2, csci = comp_prog, 
+         stem = rowMeans(select(., calc:eng), na.rm = TRUE))
+
+# Attitude towards STEM work after HS. Make composite scores for cs, and stem
+load(file.path("..", "data", "attitude_ahs_tbl.rda"))
+attitude_ahs_tbl <- attitude_ahs_tbl %>% 
+  mutate(csci = (cs + prog)/2, 
+         stem = rowMeans(select(., cs:eng), na.rm = TRUE))
+
+```
+
+## Descriptive statistics
+
+```{r descriptives}
+
+## Mean/SD by pre/post timing for attitudes toward stem work IN HS
+# for each course, without composite measures
+attitude_ihs_tbl %>% 
+  select(-c(ID, phys, math, csci, stem)) %>% 
+  group_by(timing) %>% 
+  summarize_all(list(M = mean, S = sd), na.rm = TRUE) %>%
+  kable(digits = 2, 
+        caption = "Mean attitude scores on IN HS measures by class")
+# for composite measures
+attitude_ihs_tbl %>% 
+  select(c(timing, phys, math, csci, stem)) %>% 
+  group_by(timing) %>% 
+  summarize_all(list(M = mean, S = sd), na.rm = TRUE) %>%
+  kable(digits = 2, 
+        caption = "Mean attitude on IN HS composite measures")
+
+## Mean/SD by pre/post timing for attitudes toward stem work AFTER HS
+# For individual fields, without composite measures
+attitude_ahs_tbl %>% 
+  select(-c(ID, phys, math, csci, stem)) %>% 
+  group_by(timing) %>% 
+  summarize_all(list(M = mean, S = sd), na.rm = TRUE) %>%
+  kable(digits = 2, 
+        caption = "Mean attitude scores on AFTER HS measures by field")
+# For composite measures
+attitude_ahs_tbl %>% 
+  select(c(timing, phys, math, csci, stem)) %>% 
+  group_by(timing) %>% 
+  summarize_all(list(M = mean, S = sd), na.rm = TRUE) %>%
+  kable(digits = 2, 
+        caption = "Mean attitude scores on AFTER HS composite measures")
+```
+
