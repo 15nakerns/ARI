@@ -76,12 +76,12 @@ mean_tbl %>%   kable(digits = 2,
 
 ```
 
-```{r hist-of-intrinsic-task-value-measures}
+```{r intrinsic-task-value-plot}
 
 ggplot(task_value_tidy, aes(x = score, fill = measure)) + 
   geom_histogram(position = "dodge", binwidth = 1) + 
   labs(x = "intrinsic value score", y = "frequency",
-       title = "Intrinsic task value measures paneled by segment") +
+       title = "") +
   facet_wrap(~segment)
 
 ```

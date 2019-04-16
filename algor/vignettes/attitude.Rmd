@@ -127,9 +127,9 @@ ahs_comp_desc %>%
 # These captions describe the way composite measures were built. They will be
 # attached to the figures below.
 
-ihs_cap <- "csci corresponds to 'computer programming', math averages 'calculus and trig', stem averages of calculus, trig, physics, advanced chemistry, and computer programming"
+ihs_cap <- "For courses in school, csci corresponds 'computer programming', math averages 'calculus and trig', stem averages of 'calculus', 'trig', 'physics', 'advanced chemistry', and 'computer programming'."
 
-ahs_cap <- "csci averages 'programming' and 'computer science', stem averages 'math', 'physics', 'chem', 'programming' and 'computer science'"
+ahs_cap <- "For study/work after high school, csci averages 'programming' and 'computer science', stem averages 'math', 'physics', 'chem', 'programming' and 'computer science'."
 
 ```
 
@@ -155,7 +155,7 @@ ihs_comp_desc %>%
     coord_fixed(ratio = 1.25, xlim = c(1.35, 1.65), clip = "off") +
     labs(title = "Pre/post mean attitude toward taking a subject in highschool",
          subtitle = "attitude from 'absolute no' (1) to 'absolute yes' (2).") + 
-    annotate("text", label = paste(strwrap(ahs_cap, width = 25), collapse = "\n"),
+    annotate("text", label = paste(strwrap(ihs_cap, width = 25), collapse = "\n"),
              x = 2.4, y = 4.0, hjust = 0, vjust = 1, size = 4)
 
 ```
@@ -178,7 +178,7 @@ attitude_ihs_tbl %>%
     coord_fixed(ratio = 1.25, xlim = c(1.35, 1.65), clip = "off") + 
     labs(title = "Pre/post individual attitudes toward taking a subject in highschool",
          subtitle = "attitude scores from 'absolute no' (1) to 'absolute yes' (4).",
-         caption = paste(strwrap(ahs_cap, width = 80), collapse = "\n")) +
+         caption = paste(strwrap(ihs_cap, width = 80), collapse = "\n")) +
     facet_wrap(~ID)
 
 ```
@@ -212,7 +212,7 @@ ahs_comp_desc %>%
 
 ### Individual attiudes pre/post
 
-```{r ahs-indiv-attitude-graph}
+```{r ahs-indiv-attitude-graph, dev = 'svg'}
 
 ## Attitude toward subjecets AFTER HS
 

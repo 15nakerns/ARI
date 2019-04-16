@@ -103,12 +103,12 @@ rm(tmp1, tmp2)
 
 ```
 
-```{r hist-of-engagement-behaviors}
+```{r engagement-behaviors-plot}
 
 ggplot(engagement_tidy, aes(x = count, fill = behavior)) + 
   geom_histogram(position = "dodge", binwidth = 2) +
   labs(x = "count of behaviors", y = "number of intervals",
-       title = "Measures of engagement behaviors panaled by segment") +
+       title = "") +
   facet_wrap(~segment)
 
 ```
